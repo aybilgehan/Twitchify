@@ -235,8 +235,10 @@ exports.callback = async (req, res, next) => {
                 'Authorization': `Bearer ${accessToken}`,
             },
         });
-
+        console.log("access token: " + accessToken)
         const twitch_id = userResponse.data.data[0].id;
+        console.log(userResponse.data);
+        console.log(twitch_id);
         
         if (await Twitch.findOne({ twitchId: twitch_id })) {
             res.render("error", { error: "Twitch has already been connected", redirect: "/dashboard" })
