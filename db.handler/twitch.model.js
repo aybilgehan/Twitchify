@@ -9,9 +9,7 @@ const twitchSchema = new Schema({
     },
 
     twitchId: {
-        type: Number,
-        required: true,
-        unique: true
+        type: Number
     },
 
     accessToken: {
