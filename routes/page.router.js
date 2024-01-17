@@ -17,6 +17,7 @@ router.get("/alert/:alertID", pageController.getAlertPage);
 router.get("/callback", pageController.callback);
 router.get("/auth", mw.checkUserLoggedIn, mw.checkTwitchNotConnected , pageController.twitchAuth);
 router.get("/refreshUrl", mw.checkUserLoggedIn, mw.checkTwitchConnected, pageController.refreshUrl);
+router.get("/disconnect", mw.checkUserLoggedIn, mw.checkTwitchConnected, pageController.deleteTwitch);
 
 /* - WEBSITE POST ISLEMLERI - */
 router.post("/login", pageController.postLoginPage);

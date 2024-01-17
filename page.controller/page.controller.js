@@ -276,3 +276,13 @@ exports.refreshUrl = async (req, res, next) => {
     }
 
 }
+
+exports.deleteTwitch = async (req, res, next) => {
+    try{
+        await Twitch.findOneAndDelete({ userId: req.session.userId });
+        req.session.connected = false;
+        res.render("success", { success: "Twitch connection deleted", redirect: "/dashboard" });
+    } catch (err) {
+        res.render("error", { error: "Twitch connection failed", redirect: "/dashboard" });
+    }
+}
