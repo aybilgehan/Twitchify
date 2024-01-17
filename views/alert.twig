@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web-socket-js/1.0.0/web_socket.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.min.js"></script>
+
+  <title>Event Mesaj Gösterme</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #notification-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      color: black;
+      border-radius: 10px;
+      display: none;
+      text-align: center;
+      z-index: 999;
+      width: 75%;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    #mascot-image {
+      max-width: 100%;
+      max-height: 150px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    Twitch Event Mesaj Gösterme
+  </div>
+  <div id="notification-container">
+    <img id="mascot-image" alt="Bynogame Mascot">
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const config = {{ configs }}
+    function showEventNotification(message, mascotImagePath) {
+      const notificationContainer = document.getElementById('notification-container');
+      const mascotImageElement = document.getElementById('mascot-image');
+      const messageElement = document.getElementById('message');
+
+      // Ayarlanabilir süre (milisaniye cinsinden)
+      const displayTime = 5000; // 5 saniye
+
+      messageElement.textContent = message;
+      mascotImageElement.src = mascotImagePath;
+
+      notificationContainer.style.display = 'block';
+      setTimeout(() => {
+        notificationContainer.style.opacity = 1;
+      }, 500);
+
+      setTimeout(() => {
+        notificationContainer.style.opacity = 0;
+        setTimeout(() => {
+          notificationContainer.style.display = 'none';
+        }, 500); // opacity transition süresi kadar bekle
+      }, displayTime);
+    }
+
+    // Örnek bir event geldiğinde bu fonksiyonu çağırabilirsiniz
+    function handleEvent(sub_type, event) {
+      // Burada event'e göre mesajı ve maskot görselini belirleyebilirsiniz
+      var eventName; var mascotImagePath
+      if (sub_type == "channel.follow") {
+        eventName = config.follow.message.replace("${user}", event.user_name);
+        mascotImagePath = config.follow.imageUrl;
+      } else if (sub_type == "channel.subscribe") {
+        switch (event.tier) {
+          case "1000":
+            eventName = config.tier1.message.replace("${user}", event.user_name);
+            mascotImagePath = config.tier1.imageUrl;
+            break;
+          case "2000":
+            eventName = config.tier2.message.replace("${user}", event.user_name);
+            mascotImagePath = config.tier2.imageUrl;
+            break;
+          case "3000":
+            eventName = config.tier3.message.replace("${user}", event.user_name);
+            mascotImagePath = config.tier3.imageUrl;
+            break;
+        }
+      } else if (sub_type == "channel.subscription.gift") {
+        switch (event.is_anonymous) {
+          case true:
+            eventName = config.submysterygift.message.replace("${amount}", event.total);
+            mascotImagePath = config.submysterygift.imageUrl;
+            break;
+          case false:
+            eventName = config.subgift.message.replace('${user}', event.user_name).replace('${amount}', event.total);
+            mascotImagePath = config.subgift.imageUrl;
+            break;
+        }
+      } else if (sub_type == "channel.subscription.message") {
+        eventName = config.resub.message.replace("${user}", event.user_name).replace("${months}", event.duration_months);
+        mascotImagePath = config.resub.imageUrl;
+      } else if (sub_type == "channel.cheer") {
+        if (event.is_anonymous) {
+          eventName = config.bits.message.replace("${user}", "Anonim");
+        } else {
+          eventName = config.bits.message.replace("${user}", event.user_name);
+        }
+        eventName = eventName.replace("${bits}", event.bits);
+        mascotImagePath = config.bits.imageUrl;
+      } else {
+        return;
+      }
+
+      showEventNotification(eventName, mascotImagePath);
+    }
+
+
+    const socket = io();
+
+    socket.on('connect', () => {
+      const ws = new WebSocket('wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=60');
+      ws.onmessage = function (event) {
+
+        const data = JSON.parse(event.data);
+
+        if (data.metadata.message_type == 'session_welcome') {
+          let alertID = new URL(window.location.href).pathname.split('/')[2];
+          socket.emit('twitch.eventsub', { session_id: data.payload.session.id, alert_id: alertID })
+        }
+        else if (data.metadata.message_type == 'notification') {
+          socket.emit('record', JSON.stringify(data));
+          handleEvent(data.metadata.subscription_type, data.payload.event); //Burası mesaj geldiğinde çalışacak fonksiyon ayarlanacak
+
+        }
+        else if (data.metadata.message_type == 'reconnect') {
+          window.location.reload();
+        }
+        else if (data.metadata.message_type == 'revocation') {
+          if (data.payload.subscription.status == 'authorization_revoked') { socket.emit('refresh.token') }
+        }
+      };
+    });
+    socket.on('refresh.page', () => {
+      window.location.reload();
+    });
+    socket.on('disconnect', () => {
+    });
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Socketify</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web-socket-js/1.0.0/web_socket.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.min.js"></script>
+</head>
+
+<script>
+
+  const socket = io();
+  // Establish a connection to the Socket.io server
+  /* const ws = new WebSocket('wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=30');
+  // Send the username to the server when the connection is established
+  ws.onmessage = function (event) {
+    if (event.data.message = session.welcome)
+        socket.emit(twitch.connect, session.id+guid)
+    console.log(event.data);
+  }; 
+  ws.onclose 
+    socket.emit(twitch.disconnect, session.id+guid)
+  */
+
+  socket.on('connect', () => {
+    console.log('connected');
+  });
+  socket.on('event', (data) => {
+    console.log(data);
+  });
+  socket.on('disconnect', () => {
+    console.log('disconnected');
+  });
+
+</script>
