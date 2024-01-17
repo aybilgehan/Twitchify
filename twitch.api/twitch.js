@@ -1,5 +1,6 @@
 const Twitch = require("../db.handler/twitch.model.js");
 const axios = require('axios');
+const fetch = require("node-fetch");
 
 const redirectUri = process.env.REDIRECT_URI;
 const clientID = process.env.TWITCH_CLIENT_ID;
