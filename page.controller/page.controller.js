@@ -161,7 +161,6 @@ exports.getRegisterPage = async (req, res, next) => {
 };
 
 exports.postRegisterPage = async (req, res, next) => {
-    console.log(req.body);
     try {
 
         let checkEmail = await Users.findOne({ "email": req.body.email })
@@ -235,10 +234,7 @@ exports.callback = async (req, res, next) => {
                 'Authorization': `Bearer ${accessToken}`,
             },
         });
-        console.log("access token: " + accessToken)
         const twitch_id = userResponse.data.data[0].id;
-        console.log(userResponse.data);
-        console.log(twitch_id);
         
         if (await Twitch.findOne({ twitchId: twitch_id })) {
             res.render("error", { error: "Twitch has already been connected", redirect: "/dashboard" })

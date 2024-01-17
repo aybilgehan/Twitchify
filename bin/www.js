@@ -18,7 +18,7 @@ let x = async function () {
   var server = http.createServer(app);
 
   server.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on port ${port}`);
   });
 
   server.on('error', onError);
