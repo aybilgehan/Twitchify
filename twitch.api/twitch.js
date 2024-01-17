@@ -26,9 +26,9 @@ exports.subEvents = async function (session_id, access_token, refresh_token, typ
             },
         }).then(res => res.json()).then(json => {
             if (json.status == 401) {
-                access_token = this.refreshToken(twitch_id, refresh_token).then(token => {
-                    access_token = token;
-                })
+                refreshToken(twitch_id, refresh_token).then((new_access_token) => {
+                    access_token = new_access_token;
+                });
             }
         }).then(() => {
             if (types.length > 0) {
@@ -72,9 +72,9 @@ exports.deleteEvents = async function (twitch_id, access_token, refresh_token) {
             },
         }).then(res => res.json()).then(json => {
             if (json.status == 401) {
-                access_token = this.refreshToken(twitch_id, refresh_token).then(token => {
-                    access_token = token;
-                })
+                refreshToken(twitch_id, refresh_token).then((new_access_token) => {
+                    access_token = new_access_token;
+                });
             }
         }).then(async () => {
             await fetch('https://api.twitch.tv/helix/eventsub/subscriptions', {
@@ -101,7 +101,8 @@ exports.deleteEvents = async function (twitch_id, access_token, refresh_token) {
     }
 }
 
-exports.refreshToken = async function (twitch_id, refresh_token) {
+
+const refreshToken = async function (twitch_id, refresh_token) {
     const response = await axios.post('https://id.twitch.tv/oauth2/token', null, {
         params: {
             client_id: clientID,
@@ -116,3 +117,5 @@ exports.refreshToken = async function (twitch_id, refresh_token) {
 
     return accessToken;
 }
+
+exports.refreshToken = refreshToken;
