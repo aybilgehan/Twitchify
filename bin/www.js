@@ -10,6 +10,7 @@ const twitchApi = require('../twitch.api/twitch.js');
 
 // Connect to DB
 let x = async function () {
+  
   await dataBase.connect();
 
   var port = normalizePort(process.env.PORT || '80');
