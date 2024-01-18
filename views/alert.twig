@@ -30,23 +30,20 @@
       display: none;
       text-align: center;
       z-index: 999;
-      width: 75%;
+      width: 75vw;
       opacity: 0;
       transition: opacity 0.5s ease-in-out;
     }
 
     #mascot-image {
       max-width: 100%;
-      max-height: 150px;
+      max-height: 60%;
       margin-bottom: 10px;
     }
   </style>
 </head>
 
 <body>
-  <div>
-    Twitch Event Mesaj Gösterme
-  </div>
   <div id="notification-container">
     <img id="mascot-image" alt="Bynogame Mascot">
     <div id="message"></div>
@@ -152,6 +149,7 @@
         }
         else if (data.metadata.message_type == 'revocation') {
           if (data.payload.subscription.status == 'authorization_revoked') { socket.emit('refresh.token') }
+          else if (data.payload.subscription.status == 'user_removed') { window.close() }
         }
       };
     });
