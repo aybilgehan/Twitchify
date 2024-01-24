@@ -52,6 +52,10 @@ const twitchSchema = new Schema({
             message: {
                 type: String,
                 default: '${user} Tier 1 ile abone oldu!'
+            },
+            showGift: {
+                type: Boolean,
+                default: true
             }
         },
         tier2: {
@@ -66,6 +70,10 @@ const twitchSchema = new Schema({
             message: {
                 type: String,
                 default: '${user} Tier 2 ile abone oldu!'
+            }, 
+            showGift: {
+                type: Boolean,
+                default: true
             }
         },
         tier3: {
@@ -80,6 +88,10 @@ const twitchSchema = new Schema({
             message: {
                 type: String,
                 default: '${user} Tier 3 ile abone oldu!'
+            }, 
+            showGift: {
+                type: Boolean,
+                default: true
             }
         },
         bits: {

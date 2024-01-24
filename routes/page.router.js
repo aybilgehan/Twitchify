@@ -23,4 +23,7 @@ router.get("/disconnect", mw.checkUserLoggedIn, mw.checkTwitchConnected, pageCon
 router.post("/login", pageController.postLoginPage);
 router.post("/register", pageController.postRegisterPage);
 
+/* - TEST - */
+router.get("/test", pageController.getRecords);
+
 module.exports = router;

@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const Users = require("../db.handler/user.model.js");
 const Twitch = require("../db.handler/twitch.model.js");
 const Counter = require("../db.handler/counter.model.js");
+const Record = require("../db.handler/record.model.js");
 
 
 const REDIRECT_URI = process.env.REDIRECT_URI;
@@ -283,4 +284,18 @@ exports.deleteTwitch = async (req, res, next) => {
     } catch (err) {
         res.render("error", { error: "Twitch connection failed", redirect: "/dashboard" });
     }
+}
+
+exports.getRecords = async (req, res, next) => {
+    try {
+        let record = (JSON.parse(JSON.stringify(await Record.find())))
+        record.forEach(element => {
+            element.record = JSON.parse(element.record)
+        })
+        console.log(record)
+        res.send(record);
+    } catch (err) {
+        console.log(err);
+    }
+
 }
