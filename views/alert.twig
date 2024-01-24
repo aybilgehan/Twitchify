@@ -113,7 +113,7 @@
 
     function editEvent(configMsg, replaceObj, imagePath, userMsg = "") {
       let eventName = configMsg;
-      for (const [key, vale] of Object.entries(replaceObj)) {
+      for (const [key, value] of Object.entries(replaceObj)) {
         eventName = eventName.replace(key, value);
       }
       queue.push({ configMessage: eventName, mascot: imagePath, userMessage: userMsg });
