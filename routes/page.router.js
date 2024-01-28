@@ -16,16 +16,19 @@ router.get("/alert/:alertID", pageController.getAlertPage);
 /* - TWITCH - */
 router.get("/callback", pageController.callback);
 router.get("/auth", mw.checkUserLoggedIn, mw.checkTwitchNotConnected , pageController.twitchAuth);
-router.get("/refreshUrl", mw.checkUserLoggedIn, mw.checkTwitchConnected, pageController.refreshUrl);
 router.get("/disconnect", mw.checkUserLoggedIn, mw.checkTwitchConnected, pageController.deleteTwitch);
+
+/* - TWITCH POST ISLEMLERI - */
+router.post("/regenerate", mw.checkUserLoggedIn, mw.checkTwitchConnected, pageController.regenerateUrl);
+router.post("/test", mw.checkUserLoggedIn, mw.checkTwitchConnected, pageController.test);
+
 
 /* - WEBSITE POST ISLEMLERI - */
 router.post("/login", pageController.postLoginPage);
 router.post("/register", pageController.postRegisterPage);
 
-router.post("/test",mw.checkUserLoggedIn, mw.checkTwitchConnected, pageController.test);
 
 /* - TEST - */
-router.get("/test", pageController.getRecords);
+router.get("/get-records", pageController.getRecords);
 
 module.exports = router;

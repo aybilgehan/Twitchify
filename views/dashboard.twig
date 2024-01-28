@@ -91,8 +91,11 @@
                                 <div>
                                     <button class="btn btn-outline-success" id="show-url-button">Show URL</button>
                                     <button class="btn btn-outline-success" id="copy-button">Copy URL</button>
+                                    <button class="btn btn-outline-success" id="open-url" onclick="window.open(appUrl + 'alert/' + originalUrl)">Open URL</button>
                                 </div>
                                 <div>
+                                    <button class="btn btn-outline-warning" id="regenerate-button">Regenerate
+                                        URL</button>
                                     <button class="btn btn-outline-danger"
                                         onclick="window.location.href='/disconnect'">Disconnect Twitch</button>
                                 </div>
@@ -247,23 +250,23 @@
         }
     }
 
-
-    /*     testButton.addEventListener('click', function () {
-            $.ajax({
-                url: appUrl + "test",
-                type: "POST",
-                success: function (response) {
-                    if (response == "success") {
-                        alert("success", "Test successful!");
-                    } else {
-                        alert("danger", "Twitch alert page is not open!");
-                    }
-                },
-                error: function () {
-                    alert("danger", "Test failed!");
+    $("#regenerate-button").on("click", function () {
+        $.ajax({
+            url: appUrl + "regenerate",
+            type: "POST", 
+            success: function (response) {
+                if (response.status == "success") {
+                    originalUrl = response.newTrackID;
+                    alert("success", "URL regenerated!");
+                } else {
+                    alert("danger", "URL could not regenerated!");
                 }
-            });
-        }); */
+            },
+            error: function () {
+                alert("danger", "URL could not regenerated!");
+            }
+        });
+    });
 
     $(document).ready(function () {
         $("#test-follow, #test-newsub, #test-substreak, #test-subgift, #test-cheer").on("click", function () {

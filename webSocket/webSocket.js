@@ -38,12 +38,20 @@ exports.disconnect = async function (socket) {
 };
 
 exports.record = async function (socket, data) {
+    console.log(data)
     let userId = Object.keys(users).find(key => users[key].socket === socket);
     Record.create({
         userId: userId,
         record: data
     })
 };
+
+exports.disconnectUserWhenUrlRefreshed = async function (user_id) {
+    if (user_id in users){
+        users[user_id].socket.disconnect();
+    }
+};
+
 
 exports.test = async function (user_id, test_name) {
     if (user_id in users) {

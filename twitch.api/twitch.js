@@ -26,14 +26,12 @@ exports.subEvents = async function (session_id, access_token, refresh_token, typ
             },
         }).then(res => res.json()).then(async json => {
             if (json.status == 401) {
-                console.log("refreshing token");
                 await refreshToken(twitch_id, refresh_token).then((new_access_token) => {
                     console.log("new access token: " + new_access_token);
                     access_token = new_access_token;
                 });
             }
         }).then(() => {
-            console.log("subbing events");
             if (types.length > 0) {
                 types.forEach(async element => {
                     await fetch('https://api.twitch.tv/helix/eventsub/subscriptions', {
@@ -55,7 +53,7 @@ exports.subEvents = async function (session_id, access_token, refresh_token, typ
                                 session_id: session_id
                             },
                         }),
-                    }).then(res => res.json()).then(json => console.log(json));
+                    });
                 });
             } else { return false }
         })

@@ -259,21 +259,15 @@ exports.callback = async (req, res, next) => {
     }
 }
 
-exports.refreshUrl = async (req, res, next) => {
+exports.regenerateUrl = async (req, res, next) => {
     try {
-        const user = await Users.findOne({ userId: req.session.userId });
-        if (!user) {res.render("error", { error: "User not found", redirect: "/dashboard" })}
+        let newTrackID = uuidv4();
+        await Users.findOneAndUpdate({ userId: req.session.userId }, { trackID: newTrackID }, { new: true });
+        webSocket.disconnectUserWhenUrlRefreshed(req.session.userId);
+        res.send({ newTrackID: newTrackID, status: "success"})
 
-        let trackID = uuidv4();
-
-        user.trackID = trackID;
-        await user.save();
-
-        // Socket açıksa kapatma işlemini yazmak gerekiyor
-
-        res.json({ trackID: trackID });
     } catch (err) {
-        res.render("error", { error: "Refreshing url failed", redirect: "/dashboard" });
+        res.send({ status: "error" })
     }
 
 }
