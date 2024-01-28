@@ -7,6 +7,8 @@ const Twitch = require("../db.handler/twitch.model.js");
 const Counter = require("../db.handler/counter.model.js");
 const Record = require("../db.handler/record.model.js");
 
+const webSocket = require('../webSocket/webSocket.js');
+
 
 const REDIRECT_URI = process.env.REDIRECT_URI;
 const CLIENT_ID = process.env.TWITCH_CLIENT_ID;
@@ -285,6 +287,16 @@ exports.deleteTwitch = async (req, res, next) => {
         res.render("error", { error: "Twitch connection failed", redirect: "/dashboard" });
     }
 }
+
+exports.test = async (req, res, next) => {
+    webSocket.test(req.session.userId, req.body.testName).then((status) => {
+        if (status) {
+            res.send("success")
+        } else {
+            res.send("error")
+        }
+    })
+};
 
 exports.getRecords = async (req, res, next) => {
     try {

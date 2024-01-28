@@ -196,6 +196,10 @@
     socket.on('refresh.page', () => {
       window.location.reload();
     });
+    socket.on('test', (data) => {
+      handleEvent(data.subscription.type, data.event);
+    });
+
     socket.on('disconnect', () => {
     });
 

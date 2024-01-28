@@ -81,8 +81,9 @@
                             <div class="form-group">
                                 <label for="url-display">Twitch Alert URL</label>
                                 <input type="text" class="form-control" id="url-display" readonly>
-                                <small class="text-muted">* Add a new browser 
-                                source and paste your URL. Do not forget to check the <strong>'Refresh browser when scene becomes active'</strong> option.
+                                <small class="text-muted">* Add a new browser
+                                    source and paste your URL. Do not forget to check the <strong>'Refresh browser when
+                                        scene becomes active'</strong> option.
                                 </small>
 
                             </div>
@@ -92,9 +93,20 @@
                                     <button class="btn btn-outline-success" id="copy-button">Copy URL</button>
                                 </div>
                                 <div>
-                                    <button class="btn btn-outline-danger" onclick="window.location.href='/disconnect'">Disconnect Twitch</button>
+                                    <button class="btn btn-outline-danger"
+                                        onclick="window.location.href='/disconnect'">Disconnect Twitch</button>
                                 </div>
-
+                            </div>
+                            <div class="d-flex justify-content-center mt-3">
+                                <button class="btn btn-outline-info mx-1" id="test-follow" name="follow">Test
+                                    Follow</button>
+                                <button class="btn btn-outline-info mx-1" id="test-newsub" name="newsub">Test New
+                                    Sub</button>
+                                <button class="btn btn-outline-info mx-1" id="test-substreak" name="substreak">Test Sub
+                                    Streak</button>
+                                <button class="btn btn-outline-info mx-1" id="test-subgift" name="subgift">Test Sub
+                                    Gift</button>
+                                <button class="btn btn-outline-info mx-1" id="test-cheer" name="cheer">Test Cheer</button>
                             </div>
                         </div>
                         {% else %}
@@ -109,7 +121,7 @@
             </div>
             <div class="clear"></div>
         </div>
-        
+
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-content center-relative">
@@ -175,11 +187,9 @@
     const showUrlButton = document.getElementById('show-url-button');
     const copyButton = document.getElementById('copy-button');
 
-
     let appUrl = "{{appUrl}}";
     let originalUrl = "{{alertID}}"; // Backend tarafından alınan URL
     let urlVisible = false;
-
 
     $(document).ready(function () {
         $("#success-alert").hide();
@@ -237,6 +247,45 @@
         }
     }
 
+
+    /*     testButton.addEventListener('click', function () {
+            $.ajax({
+                url: appUrl + "test",
+                type: "POST",
+                success: function (response) {
+                    if (response == "success") {
+                        alert("success", "Test successful!");
+                    } else {
+                        alert("danger", "Twitch alert page is not open!");
+                    }
+                },
+                error: function () {
+                    alert("danger", "Test failed!");
+                }
+            });
+        }); */
+
+    $(document).ready(function () {
+        $("#test-follow, #test-newsub, #test-substreak, #test-subgift, #test-cheer").on("click", function () {
+            var testName = $(this).attr("name");
+
+            $.ajax({
+                url: appUrl + "test",
+                type: "POST",
+                data: { testName: testName }, // İlgili test adını ve değerini gönder
+                success: function (response) {
+                    if (response == "success") {
+                        alert("success", "Test successful!");
+                    } else {
+                        alert("danger", "Twitch alert page is not open!");
+                    }
+                },
+                error: function () {
+                    alert("danger", "Test failed!");
+                }
+            });
+        });
+    });
 
 
 </script>

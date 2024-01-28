@@ -7,10 +7,11 @@ const User = require('../db.handler/user.model.js');
 const Twitch = require('../db.handler/twitch.model.js');
 const Record = require('../db.handler/record.model.js');
 const twitchApi = require('../twitch.api/twitch.js');
+const webSocket = require('../webSocket/webSocket.js');
 
 // Connect to DB
 let x = async function () {
-  
+
   await dataBase.connect();
 
   var port = normalizePort(process.env.PORT || '80');
@@ -28,10 +29,10 @@ let x = async function () {
   const io = socketIo(server);
 
   io.on('connection', (socket) => {
-    var user;
-    var user_twitch;
+    //var user;
+    //var user_twitch;
     socket.on('twitch.eventsub', async (data) => {
-      user = await User.findOne({ trackID: data.alert_id });
+      /* user = await User.findOne({ trackID: data.alert_id });
       user_twitch =  await Twitch.findOne({ userId: user.userId });
       
       twitchApi.subEvents(
@@ -40,27 +41,34 @@ let x = async function () {
         user_twitch.refreshToken,
         ["channel.cheer", "channel.follow", "channel.subscribe", "channel.subscription.gift", "channel.subscription.message"],
         user_twitch.twitchId
-      )
+      ) */
+
+      webSocket.eventSub(socket, data);
     })
 
     socket.on('refresh.token', async () => {
-      twitchApi.refreshToken(user_twitch.twitchId, user_twitch.refreshToken).then(() => {
+      /* twitchApi.refreshToken(user_twitch.twitchId, user_twitch.refreshToken).then(() => {
         console.log("Refreshed token")
         socket.emit('refresh.page');
-      });
+      }); */
+      webSocket.refreshToken(socket);
     });
 
     socket.on('disconnect', () => {
-      console.log('user disconnected')
-      twitchApi.deleteEvents(user_twitch.twitchId, user_twitch.accessToken, user_twitch.refreshToken);
+      /* console.log('user disconnected')
+      twitchApi.deleteEvents(user_twitch.twitchId, user_twitch.accessToken, user_twitch.refreshToken); */
+      webSocket.disconnect(socket);
     });
 
     socket.on('record', (data) => {
-      Record.create({
+      /* Record.create({
         userId: user.userId,
         record: data
       })
-    })
+    }) */
+      webSocket.record(socket, data);
+    });
+    
   });
 
   function normalizePort(val) {
@@ -72,7 +80,7 @@ let x = async function () {
 
     if (port >= 0) {
       return port;
-    } 
+    }
 
     return false;
   }
