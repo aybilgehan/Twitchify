@@ -26,6 +26,7 @@ router.post("/test", mw.checkUserLoggedIn, mw.checkTwitchConnected, pageControll
 /* - WEBSITE POST ISLEMLERI - */
 router.post("/login", pageController.postLoginPage);
 router.post("/register", pageController.postRegisterPage);
+router.post("/update-config", mw.checkUserLoggedIn, mw.checkTwitchConnected, pageController.postUpdateConfigs);
 
 
 /* - TEST - */

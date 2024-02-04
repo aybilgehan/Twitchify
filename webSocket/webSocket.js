@@ -13,7 +13,7 @@ exports.eventSub = async function (socket, data) {
         data.session_id,
         user_twitch.accessToken,
         user_twitch.refreshToken,
-        ["channel.cheer", "channel.follow", "channel.subscribe", "channel.subscription.gift", "channel.subscription.message"],
+        user_twitch.eventSubs,
         user_twitch.twitchId
     )
 
@@ -53,7 +53,7 @@ exports.disconnectUserWhenUrlRefreshed = async function (user_id) {
 };
 
 
-exports.test = async function (user_id, test_name) {
+exports.test = async function (user_id, test_name, config) {
     if (user_id in users) {
         let socket = users[user_id].socket;
         let data;
@@ -218,7 +218,97 @@ exports.test = async function (user_id, test_name) {
                     }
                 };
                 break
+            case "tier2":
+                data = {
+                    "subscription": {
+                        "id": "f1c2a387-161a-49f9-a165-0f21d7a4e1c4",
+                        "type": "channel.subscribe",
+                        "version": "1",
+                        "status": "enabled",
+                        "cost": 0,
+                        "condition": {
+                           "broadcaster_user_id": "1337"
+                        },
+                         "transport": {
+                            "method": "webhook",
+                            "callback": "https://example.com/webhooks/callback"
+                        },
+                        "created_at": "2019-11-16T10:11:12.634234626Z"
+                    },
+                    "event": {
+                        "user_id": "1234",
+                        "user_login": "cool_user",
+                        "user_name": "Cool_User",
+                        "broadcaster_user_id": "1337",
+                        "broadcaster_user_login": "cooler_user",
+                        "broadcaster_user_name": "Cooler_User",
+                        "tier": "2000",
+                        "is_gift": false
+                    }
+                };
+                break
+            case "tier3":
+                data = {
+                    "subscription": {
+                        "id": "f1c2a387-161a-49f9-a165-0f21d7a4e1c4",
+                        "type": "channel.subscribe",
+                        "version": "1",
+                        "status": "enabled",
+                        "cost": 0,
+                        "condition": {
+                           "broadcaster_user_id": "1337"
+                        },
+                         "transport": {
+                            "method": "webhook",
+                            "callback": "https://example.com/webhooks/callback"
+                        },
+                        "created_at": "2019-11-16T10:11:12.634234626Z"
+                    },
+                    "event": {
+                        "user_id": "1234",
+                        "user_login": "cool_user",
+                        "user_name": "Cool_User",
+                        "broadcaster_user_id": "1337",
+                        "broadcaster_user_login": "cooler_user",
+                        "broadcaster_user_name": "Cooler_User",
+                        "tier": "3000",
+                        "is_gift": false
+                    }
+                };
+                break
+            case "submysterygift":
+                data = {
+                    "subscription": {
+                        "id": "f1c2a387-161a-49f9-a165-0f21d7a4e1c4",
+                        "type": "channel.subscription.gift",
+                        "version": "1",
+                        "status": "enabled",
+                        "cost": 0,
+                        "condition": {
+                           "broadcaster_user_id": "1337"
+                        },
+                         "transport": {
+                            "method": "webhook",
+                            "callback": "https://example.com/webhooks/callback"
+                        },
+                        "created_at": "2019-11-16T10:11:12.634234626Z"
+                    },
+                    "event": {
+                        "user_id": null,
+                        "user_login": null,
+                        "user_name": null,
+                        "broadcaster_user_id": "1337",
+                        "broadcaster_user_login": "cooler_user",
+                        "broadcaster_user_name": "Cooler_User",
+                        "total": 2,
+                        "tier": "1000",
+                        "cumulative_total": null, //null if anonymous or not shared by the user
+                        "is_anonymous": true
+                    }
+                };
+
         };
+        data.config = config;
         socket.emit('test', data);
         return true;
     } else {

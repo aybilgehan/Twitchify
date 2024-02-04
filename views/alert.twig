@@ -52,7 +52,7 @@
   </div>
 
   <script>
-    const config = {{ configs }}
+    var config = {{ configs }}
     var queue = [];
     var isShowing = false;
 
@@ -145,7 +145,7 @@
       } else if (sub_type == "channel.subscription.gift") {
         switch (event.is_anonymous) {
           case true:
-            editEvent(config.subgift.message, { "${user}": "Anonim", "${amount}": event.total }, config.subgift.imageUrl);
+            editEvent(config.submysterygift.message, { "${amount}": event.total }, config.submysterygift.imageUrl);
             break;
           case false:
             editEvent(config.subgift.message, { "${user}": event.user_name, "${amount}": event.total }, config.subgift.imageUrl);
@@ -155,9 +155,9 @@
         editEvent(config.resub.message, { "${user}": event.user_name, "${months}": event.cumulative_months }, config.resub.imageUrl, event.message.text);
       } else if (sub_type == "channel.cheer") {
         if (event.is_anonymous) {
-          editEvent(config.bits.message, { "${user}": "Anonim", "${bits}": event.bits }, config.bits.imageUrl, event.message);
+          editEvent(config.cheer.message, { "${user}": "Anonim", "${bits}": event.bits }, config.cheer.imageUrl, event.message);
         } else {
-          editEvent(config.bits.message, { "${user}": event.user_name, "${bits}": event.bits }, config.bits.imageUrl, event.message);
+          editEvent(config.cheer.message, { "${user}": event.user_name, "${bits}": event.bits }, config.cheer.imageUrl, event.message);
         }
       } else {
         return;
@@ -197,6 +197,7 @@
       window.location.reload();
     });
     socket.on('test', (data) => {
+      config = data.config;
       handleEvent(data.subscription.type, data.event);
     });
 

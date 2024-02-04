@@ -116,7 +116,8 @@ exports.getDashboardPage = async (req, res, next) => {
         {
             connected: true,
             alertID: user.trackID,
-            configs: twitch.configs
+            eventSubTypes: twitch.eventSubs.length > 0 ? twitch.eventSubs: ["channel.cheer", "channel.follow", "channel.subscribe", "channel.subscription.gift", "channel.subscription.message"],
+            configs: JSON.stringify(twitch.configs)
         });
     } else {
         res.render("dashboard", {connected: false});
@@ -185,6 +186,15 @@ exports.postRegisterPage = async (req, res, next) => {
     }
 };
 
+exports.postUpdateConfigs = async (req, res, next) => {
+    try {
+        await Twitch.findOneAndUpdate({ userId: req.session.userId }, { configs: JSON.parse(req.body.configs), eventSubs: req.body.eventSubs }, { new: true });
+        res.send("success");
+    } catch (err) {
+        res.send("error");
+    }
+};
+
 exports.getLogoutPage = async (req, res, next) => {
     try {
         req.session = null;
@@ -206,7 +216,7 @@ exports.getAlertPage = async (req, res, next) => {
     } catch (err) {
         res.send("Invalid track id")
     }
-}
+};
 
 /* --------------------- TWITCH ISLEMLERI ---------------------*/
 
@@ -283,7 +293,7 @@ exports.deleteTwitch = async (req, res, next) => {
 }
 
 exports.test = async (req, res, next) => {
-    webSocket.test(req.session.userId, req.body.testName).then((status) => {
+    webSocket.test(req.session.userId, req.body.testName, req.body.config).then((status) => {
         if (status) {
             res.send("success")
         } else {

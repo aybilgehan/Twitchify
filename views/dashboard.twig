@@ -2,17 +2,19 @@
 <html lang="en-US">
 
 <head>
-    <title>Twitchify</title>
+    <title>Twitchify - User Config Dashboard</title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
     <link rel="shortcut icon" href="images/favicon-black.jpg">
     <link href='https://fonts.googleapis.com/css?family=Rubik:400,700,700i' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href='style.css'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
 
 </head>
 
@@ -46,7 +48,10 @@
                             </li>
                             {% if connected %}
                             <li>
-                                <a href="#connect">Track URL</a>
+                                <a href="#connect">Alert URL</a>
+                            </li>
+                            <li>
+                                <a href="#config">Configure Alerts</a>
                             </li>
                             {% else %}
                             <li>
@@ -67,7 +72,7 @@
             <div class="page-title-holder">
                 <h3 class="entry-title">
                     {% if connected %}
-                    Track URL
+                    Alert URL
                     {% else %}
                     Connect Twitch
                     {% endif %}
@@ -78,20 +83,20 @@
                     <div class="button-container">
                         {% if connected %}
                         <div class="container-fluid mt-5">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="url-display">Twitch Alert URL</label>
                                 <input type="text" class="form-control" id="url-display" readonly>
                                 <small class="text-muted">* Add a new browser
                                     source and paste your URL. Do not forget to check the <strong>'Refresh browser when
                                         scene becomes active'</strong> option.
                                 </small>
-
                             </div>
                             <div class="container-fluid d-md-flex flex-md-row flex-column justify-content-between">
                                 <div>
                                     <button class="btn btn-outline-success" id="show-url-button">Show URL</button>
                                     <button class="btn btn-outline-success" id="copy-button">Copy URL</button>
-                                    <button class="btn btn-outline-success" id="open-url" onclick="window.open(appUrl + 'alert/' + originalUrl)">Open URL</button>
+                                    <button class="btn btn-outline-success" id="open-url"
+                                        onclick="window.open(appUrl + 'alert/' + originalUrl)">Open URL</button>
                                 </div>
                                 <div>
                                     <button class="btn btn-outline-warning" id="regenerate-button">Regenerate
@@ -109,7 +114,8 @@
                                     Streak</button>
                                 <button class="btn btn-outline-info mx-1" id="test-subgift" name="subgift">Test Sub
                                     Gift</button>
-                                <button class="btn btn-outline-info mx-1" id="test-cheer" name="cheer">Test Cheer</button>
+                                <button class="btn btn-outline-info mx-1" id="test-cheer" name="cheer">Test
+                                    Cheer</button>
                             </div>
                         </div>
                         {% else %}
@@ -124,46 +130,395 @@
             </div>
             <div class="clear"></div>
         </div>
+        {% if connected %}
+        <div id="config" class="section">
+            <div class="page-title-holder">
+                <h3 class="entry-title">
+                    Configure Alerts
+                </h3>
+            </div>
+            <div class="section-wrapper block content-1170 center-relative">
+                <div class="content-wrapper">
+                    <!-- EventSub Type Checkboxes -->
+                    <div class="d-flex justify-content-center">
+                        <label for="event-checkboxes" class="form-label mb-2">Alert Types</label>
+                    </div>
+                    <div class="d-flex flex-row justify-content-center" id="event-checkboxes">
+                        <div class="form-check me-3">
+                            <input class="form-check-input" type="checkbox" value="cheer" id="channel.cheer">
+                            <label class="form-check-label" for="channel.cheer">
+                                Cheer
+                            </label>
+                        </div>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-content center-relative">
-                <div class="footer-logo">
-                    <img src="images/favicon-black.jpg" alt="Twitchify" />
-                </div>
-                <div class="footer-logo-divider"></div>
-                <div class="footer-mail">
-                    <a href="mailto:help@twitchify.com">help@twitchify.com</a>
-                </div>
-                <div class="footer-social-divider"></div>
-                <div class="social-holder">
-                    <a href="#">
-                        <span class="fa fa-twitter"></span>
-                    </a>
-                    <a href="#">
-                        <span class="fa fa-facebook"></span>
-                    </a>
-                    <a href="#">
-                        <span class="fa fa-behance"></span>
-                    </a>
-                    <a href="#">
-                        <span class="fa fa-dribbble"></span>
-                    </a>
-                </div>
+                        <div class="form-check me-3">
+                            <input class="form-check-input" type="checkbox" value="follow" id="channel.follow">
+                            <label class="form-check-label" for="channel.follow">
+                                Follow
+                            </label>
+                        </div>
 
-                <div class="copyright-holder">
-                    © 2023 Twitchify
+                        <div class="form-check me-3">
+                            <input class="form-check-input" type="checkbox" value="sub" id="channel.subscribe">
+                            <label class="form-check-label" for="channel.subscribe">
+                                Sub
+                            </label>
+                        </div>
+
+                        <div class="form-check me-3">
+                            <input class="form-check-input" type="checkbox" value="subgift"
+                                id="channel.subscription.gift">
+                            <label class="form-check-label" for="channel.subscription.gift">
+                                Sub Gift
+                            </label>
+                        </div>
+
+                        <div class="form-check me-3">
+                            <input class="form-check-input" type="checkbox" value="substreak"
+                                id="channel.subscription.message">
+                            <label class="form-check-label" for="channel.subscription.message">
+                                Sub Streak
+                            </label>
+                        </div>
+
+
+                    </div>
+
+                    <div class="container">
+                        <div class="mt-3 collapse-container" id="cheer-Collapse" style="display: none;">
+                            <button type="button" data-bs-toggle="collapse" data-bs-target="#cheerCollapse"
+                                aria-expanded="false" aria-controls="cheerCollapse"
+                                class="collapse-button collapse-title">
+                                Cheer Configuration
+                            </button>
+                            <div id="cheerCollapse" class="collapse mt-3">
+
+                                <div class="mb-3">
+                                    <label for="cheer-soundUrl" class="form-label">Sound Url</label>
+                                    <input type="url" class="form-control" id="cheer-soundUrl"
+                                        onchange="updateConfig(this.id)">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cheer-imageUrl" class="form-label">Image Url</label>
+                                    <input type="url" class="form-control" id="cheer-imageUrl"
+                                        onchange="updateConfig(this.id)">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cheer-message" class="form-label">Image Url</label>
+                                    <input type="text" class="form-control" id="cheer-message"
+                                        aria-describedby="cheerMessageHelp" onchange="updateConfig(this.id)">
+                                    <div class="form-text-container">
+                                        <div id="cheerMessageHelp" class="form-text">${user} : Cheerer Twitch username
+                                        </div>
+                                        <div id="cheerMessageHelp" class="form-text">${bits} : Amount of bits</div>
+                                        <div id="cheerMessageHelp" class="form-text">Anonymous cheerer's username will
+                                            be shown as anonymous</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <button class="btn btn-outline-info mx-1" id="test-cheer" name="cheer">Test
+                                        Cheer</button>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="mt-3 collapse-container" id="follow-Collapse" style="display: none;">
+                            <button type="button" data-bs-toggle="collapse" data-bs-target="#followCollapse"
+                                aria-expanded="false" aria-controls="followCollapse"
+                                class="collapse-button collapse-title">
+                                Follow Configuration
+                            </button>
+                            <div id="followCollapse" class="collapse mt-3">
+                                <div class="mb-3">
+                                    <label for="follow-soundUrl" class="form-label">Sound Url</label>
+                                    <input type="url" class="form-control" id="follow-soundUrl"
+                                        onchange="updateConfig(this.id)">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="follow-imageUrl" class="form-label">Image Url</label>
+                                    <input type="url" class="form-control" id="follow-imageUrl"
+                                        onchange="updateConfig(this.id)">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="follow-message" class="form-label">Image Url</label>
+                                    <input type="text" class="form-control" id="follow-message"
+                                        aria-describedby="followMessageHelp" onchange="updateConfig(this.id)">
+                                    <div class="form-text-container">
+                                        <div id="followMessageHelp" class="form-text">${user} : Follower Twitch username
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <button class="btn btn-outline-info mx-1" id="test-follow" name="follow">Test
+                                        Follow</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 collapse-container" id="sub-Collapse" style="display: none;">
+                            <button type="button" data-bs-toggle="collapse" data-bs-target="#subCollapse"
+                                aria-expanded="false" aria-controls="subCollapse"
+                                class="collapse-button collapse-title">
+                                Sub Configuration
+                            </button>
+                            <div id="subCollapse" class="collapse mt-3">
+                                <div>
+                                    <label class="form-label mt-3" style="text-decoration: underline;">Tier1
+                                        Configuration</label>
+                                    <div class="mb-3">
+                                        <label for="tier1-soundUrl" class="form-label">Sound Url</label>
+                                        <input type="url" class="form-control" id="tier1-soundUrl"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tier1-imageUrl" class="form-label">Image Url</label>
+                                        <input type="url" class="form-control" id="tier1-imageUrl"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tier1-message" class="form-label">Image Url</label>
+                                        <input type="text" class="form-control" id="tier1-message"
+                                            aria-describedby="tier1MessageHelp" onchange="updateConfig(this.id)">
+                                        <div class="form-text-container">
+                                            <div id="tier1MessageHelp" class="form-text">${user} : Sub Twitch username
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tier1-showGift" class="form-check-label me-1">Show Gift</label>
+                                        <input type="checkbox" class="form-check-input" id="tier1-showGift"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-outline-info mx-1" id="test-newsub" name="newsub">Test
+                                            Tier1 New Sub</button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="form-label mt-3" style="text-decoration: underline;">Tier2
+                                        Configuration</label>
+                                    <div class="mb-3">
+                                        <label for="tier2-soundUrl" class="form-label">Sound Url</label>
+                                        <input type="url" class="form-control" id="tier2-soundUrl"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tier2-imageUrl" class="form-label">Image Url</label>
+                                        <input type="url" class="form-control" id="tier2-imageUrl"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tier2-message" class="form-label">Image Url</label>
+                                        <input type="text" class="form-control" id="tier2-message"
+                                            aria-describedby="tier2MessageHelp" onchange="updateConfig(this.id)">
+                                        <div class="form-text-container">
+                                            <div id="tier2MessageHelp" class="form-text">${user} : Sub Twitch username
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tier2-showGift" class="form-check-label me-1">Show Gift</label>
+                                        <input type="checkbox" class="form-check-input" id="tier2-showGift"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-outline-info mx-1" id="test-tier2" name="tier2">Test
+                                            Tier2 New Sub</button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="form-label mt-3" style="text-decoration: underline;">Tier3
+                                        Configuration</label>
+                                    <div class="mb-3">
+                                        <label for="tier3-soundUrl" class="form-label">Sound Url</label>
+                                        <input type="url" class="form-control" id="tier3-soundUrl"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tier3-imageUrl" class="form-label">Image Url</label>
+                                        <input type="url" class="form-control" id="tier3-imageUrl"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tier3-message" class="form-label">Image Url</label>
+                                        <input type="text" class="form-control" id="tier3-message"
+                                            aria-describedby="tier3MessageHelp" onchange="updateConfig(this.id)">
+                                        <div class="form-text-container">
+                                            <div id="tier3MessageHelp" class="form-text">${user} : Sub Twitch username
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tier3-showGift" class="form-check-label me-1">Show Gift</label>
+                                        <input type="checkbox" class="form-check-input" id="tier3-showGift"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-outline-info mx-1" id="test-tier3" name="tier3">Test
+                                            Tier3 New Sub</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="mt-3 collapse-container" id="subgift-Collapse" style="display: none;">
+                            <button type="button" data-bs-toggle="collapse" data-bs-target="#subgiftCollapse"
+                                aria-expanded="false" aria-controls="subgiftCollapse"
+                                class="collapse-button collapse-title">
+                                Sub Gift Configuration
+                            </button>
+                            <div id="subgiftCollapse" class="collapse mt-3">
+                                <div>
+                                    <label class="form-label mt-3" style="text-decoration: underline;">Nonanonymous Gift
+                                        Configuration</label>
+                                    <div class="mb-3">
+                                        <label for="subgift-soundUrl" class="form-label">Sound Url</label>
+                                        <input type="url" class="form-control" id="subgift-soundUrl"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="subgift-imageUrl" class="form-label">Image Url</label>
+                                        <input type="url" class="form-control" id="subgift-imageUrl"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="subgift-message" class="form-label">Image Url</label>
+                                        <input type="text" class="form-control" id="subgift-message"
+                                            aria-describedby="subgiftMessageHelp" onchange="updateConfig(this.id)">
+                                        <div class="form-text-container">
+                                            <div id="subgiftMessageHelp" class="form-text">${user} : Gifter Twitch
+                                                username
+                                            </div>
+                                            <div id="subgiftMessageHelp" class="form-text">${amount} : Amount of gifted
+                                                subs</div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-outline-info mx-1" id="test-subgift" name="subgift">Test
+                                            Sub Gift</button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="form-label mt-3" style="text-decoration: underline;">Anonymous Gift
+                                        Configuration</label>
+                                    <div class="mb-3">
+                                        <label for="submysterygift-soundUrl" class="form-label">Sound Url</label>
+                                        <input type="url" class="form-control" id="submysterygift-soundUrl"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="submysterygift-imageUrl" class="form-label">Image Url</label>
+                                        <input type="url" class="form-control" id="submysterygift-imageUrl"
+                                            onchange="updateConfig(this.id)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="submysterygift-message" class="form-label">Image Url</label>
+                                        <input type="text" class="form-control" id="submysterygift-message"
+                                            aria-describedby="submysterygiftMessageHelp"
+                                            onchange="updateConfig(this.id)">
+                                        <div class="form-text-container">
+                                            <div id="submysterygiftMessageHelp" class="form-text">${amount} : Amount of
+                                                gifted subs</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <button class="btn btn-outline-info mx-1" id="test-submysterygift"
+                                        name="submysterygift">Test
+                                        Anon Sub Gift</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="mt-3 collapse-container" id="substreak-Collapse" style="display: none;">
+                            <button type="button" data-bs-toggle="collapse" data-bs-target="#substreakCollapse"
+                                aria-expanded="false" aria-controls="substreakCollapse"
+                                class="collapse-button collapse-title">
+                                Sub Streak Configuration (Resub)
+                            </button>
+                            <div id="substreakCollapse" class="collapse mt-3">
+                                <div class="mb-3">
+                                    <label for="resub-soundUrl" class="form-label">Sound Url</label>
+                                    <input type="url" class="form-control" id="resub-soundUrl"
+                                        onchange="updateConfig(this.id)">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="resub-imageUrl" class="form-label">Image Url</label>
+                                    <input type="url" class="form-control" id="resub-imageUrl"
+                                        onchange="updateConfig(this.id)">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="resub-message" class="form-label">Image Url</label>
+                                    <input type="text" class="form-control" id="resub-message"
+                                        aria-describedby="resubMessageHelp" onchange="updateConfig(this.id)">
+                                    <div class="form-text-container">
+                                        <div id="resubMessageHelp" class="form-text">${user} : Sub Twitch username</div>
+                                        <div id="resubMessageHelp" class="form-text">${months} : Amount of streak months
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <button class="btn btn-outline-info mx-1" id="test-substreak" name="substreak">Test
+                                        Sub Streak</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center mt-5">
+                            <button class="btn btn-outline-success" id="save-config" style="display: none;"
+                                onclick="saveConfig()">Save Config</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </footer>
+        </div>
+        <div class="clear"></div>
     </div>
-    <div classs="container p-5">
-        <div class="row no-gutters fixed-bottom">
-            <div class="alert alert-success" id="success-alert">
+    {% endif %}
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content center-relative">
+            <div class="footer-logo">
+                <img src="images/favicon-black.jpg" alt="Twitchify" />
+            </div>
+            <div class="footer-logo-divider"></div>
+            <div class="footer-mail">
+                <a href="mailto:help@twitchify.com">help@twitchify.com</a>
+            </div>
+            <div class="footer-social-divider"></div>
+            <div class="social-holder">
+                <a href="#">
+                    <span class="fa fa-twitter"></span>
+                </a>
+                <a href="#">
+                    <span class="fa fa-facebook"></span>
+                </a>
+                <a href="#">
+                    <span class="fa fa-behance"></span>
+                </a>
+                <a href="#">
+                    <span class="fa fa-dribbble"></span>
+                </a>
+            </div>
+
+            <div class="copyright-holder">
+                © 2023 Twitchify
+            </div>
+        </div>
+    </footer>
+    <div class="container">
+        <div class="row fixed-bottom g-0">
+            <div class="alert alert-success col-md-auto" id="success-alert">
                 <strong>Success! </strong>
                 <p style="display:inline;"></p>
             </div>
-            <div class="alert alert-danger" id="danger-alert">
+            <div class="alert alert-danger col-md-auto" id="danger-alert">
                 <strong>Error! </strong>
                 <p style="display:inline;"></p>
             </div>
@@ -172,6 +527,9 @@
 </body>
 
 <!--Load JavaScript-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
 <script src="js/jquery.js"></script>
 <script src="js/jquery.sticky.js"></script>
 <script src="js/tipper.js"></script>
@@ -184,6 +542,100 @@
 <script src='js/owl.carousel.min.js'></script>
 <script src='js/jquery.sticky-kit.min.js'></script>
 <script src='js/main.js'></script>
+
+<!--Eventsub Type Checkboxes -->
+<script>
+    var eventSubs = '{{eventSubTypes}}' == "null" ? [] : "{{eventSubTypes}}".split(",");
+    var configs = JSON.parse('{{configs}}')
+
+    window.onload = function () {
+        if (eventSubs.length > 0) {
+            document.getElementById('save-config').style.display = "block";
+        }
+        eventSubs.forEach(function (eventSub) {
+            let checkbox = document.getElementById(eventSub);
+            checkbox.checked = true;
+            let collapse = document.getElementById(checkbox.value + '-Collapse');
+            collapse.style.display = "block";
+            let config = document.getElementById(checkbox.value + 'Collapse');
+            config.querySelectorAll('input').forEach(function (input) {
+                if (input.type == "checkbox") {
+                    input.checked = configs[input.id.split('-')[0]].hasOwnProperty(input.id.split('-')[1]) ? configs[input.id.split('-')[0]][input.id.split('-')[1]] : false;
+                } else {
+                    input.value = configs[input.id.split('-')[0]].hasOwnProperty(input.id.split('-')[1]) ? configs[input.id.split('-')[0]][input.id.split('-')[1]] : "-";
+                }
+            });
+        });
+    }
+
+    // Listen for checkbox changes
+    var checkboxes = document.getElementById('event-checkboxes').querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            var checkboxValue = this.value;
+            var collapse = document.getElementById(checkboxValue + '-Collapse');
+            if (this.checked) {
+                collapse.style.display = "block";
+                eventSubs.push(checkbox.id);
+            } else {
+                collapse.style.display = "none";
+                eventSubs.splice(eventSubs.indexOf(checkbox.id), 1);
+            }
+            if (eventSubs.length == 0 && document.getElementById('save-config').style.display == "block") {
+                document.getElementById('save-config').style.display = "none";
+            } else if (eventSubs.length > 0 && document.getElementById('save-config').style.display == "none") {
+                document.getElementById('save-config').style.display = "block";
+            }
+        });
+    });
+
+</script>
+
+<!-- Eventsub Configuration -->
+<script>
+    function updateConfig(id) {
+        var input = document.getElementById(id);
+        if (input.type == "checkbox") {
+            configs[id.split('-')[0]][id.split('-')[1]] = input.checked;
+        } else {
+            var value = input.value;
+            configs[id.split('-')[0]][id.split('-')[1]] = value;
+        }
+    };
+
+    function saveConfig() {
+        $.ajax({
+            url: appUrl + "update-config",
+            type: "POST",
+            data: { configs: JSON.stringify(configs), eventSubs: eventSubs },
+            success: function (response) {
+                if (response == "success") {
+                    alert("success", "Configurations saved!");
+                } else {
+                    alert("danger", "Configurations could not saved!");
+                }
+            },
+            error: function () {
+                alert("danger", "Configurations could not saved!");
+            }
+        });
+    }
+</script>
+
+<script>
+    const eventSubEnum = {
+        "follow": "channel.follow",
+        "newsub": "channel.subscribe",
+        "tier2": "channel.subscribe",
+        "tier3": "channel.subscribe",
+        "substreak": "channel.subscription.message",
+        "subgift": "channel.subscription.gift",
+        "submysterygift": "channel.subscription.gift",
+        "cheer": "channel.cheer"
+    };
+</script>
+
+
 <script>
 
     const urlDisplay = document.getElementById('url-display');
@@ -253,7 +705,7 @@
     $("#regenerate-button").on("click", function () {
         $.ajax({
             url: appUrl + "regenerate",
-            type: "POST", 
+            type: "POST",
             success: function (response) {
                 if (response.status == "success") {
                     originalUrl = response.newTrackID;
@@ -269,25 +721,31 @@
     });
 
     $(document).ready(function () {
-        $("#test-follow, #test-newsub, #test-substreak, #test-subgift, #test-cheer").on("click", function () {
+        $("#test-follow, #test-newsub, #test-substreak, #test-subgift, #test-cheer, #test-tier2, #test-tier3, #test-submysterygift").on("click", function () {
             var testName = $(this).attr("name");
 
-            $.ajax({
-                url: appUrl + "test",
-                type: "POST",
-                data: { testName: testName }, // İlgili test adını ve değerini gönder
-                success: function (response) {
-                    if (response == "success") {
-                        alert("success", "Test successful!");
-                    } else {
-                        alert("danger", "Twitch alert page is not open!");
+            if (eventSubs.includes(eventSubEnum[testName])) {
+
+                $.ajax({
+                    url: appUrl + "test",
+                    type: "POST",
+                    data: { testName: testName, config: configs }, // İlgili test adını ve değerini gönder
+                    success: function (response) {
+                        if (response == "success") {
+                            alert("success", "Test successful!");
+                        } else {
+                            alert("danger", "Twitch alert page is not open!");
+                        }
+                    },
+                    error: function () {
+                        alert("danger", "Test failed!");
                     }
-                },
-                error: function () {
-                    alert("danger", "Test failed!");
-                }
-            });
+                });
+            } else {
+                alert("danger", "Please select the relevant type from the Alert Types section!");
+            }
         });
+
     });
 
 
