@@ -7,6 +7,7 @@ const mw = require("../middlewares/mw.js");
 
 const upload = multer({
     dest: 'uploads/',
+    limits: { fileSize: 1024 * 1024 * 1},
     fileFilter: (req, file, cb) => {
         // Yalnızca belirli dosya türlerine izin ver
         const allowedFileTypes = ['.png', '.jpeg', '.jpg', '.webp', '.gif'];
