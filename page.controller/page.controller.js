@@ -1,6 +1,14 @@
 const axios = require('axios');
 require('dotenv').config();
 const { v4: uuidv4 } = require('uuid');
+const AWS = require('aws-sdk');
+const fs = require('fs');
+
+const s3 = new AWS.S3( {
+    region: process.env.AWS_REGION,
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY
+});
 
 const Users = require("../db.handler/user.model.js");
 const Twitch = require("../db.handler/twitch.model.js");
@@ -111,19 +119,19 @@ exports.getMainPage = async (req, res, next) => {
 exports.getDashboardPage = async (req, res, next) => {
     if (req.session.connected) {
         const user = await Users.findOne({ userId: req.session.userId });
-        const twitch = await Twitch.findOne({ userId: req.session.userId }); 
-        res.render("dashboard", 
-        {
-            connected: true,
-            alertID: user.trackID,
-            eventSubTypes: twitch.eventSubs.length > 0 ? twitch.eventSubs: ["channel.cheer", "channel.follow", "channel.subscribe", "channel.subscription.gift", "channel.subscription.message"],
-            configs: JSON.stringify(twitch.configs)
-        });
+        const twitch = await Twitch.findOne({ userId: req.session.userId });
+        res.render("dashboard",
+            {
+                connected: true,
+                alertID: user.trackID,
+                eventSubTypes: twitch.eventSubs.length > 0 ? twitch.eventSubs : ["channel.cheer", "channel.follow", "channel.subscribe", "channel.subscription.gift", "channel.subscription.message"],
+                configs: JSON.stringify(twitch.configs)
+            });
     } else {
-        res.render("dashboard", {connected: false});
+        res.render("dashboard", { connected: false });
     }
 }
-    
+
 
 // Get login page
 exports.getLoginPage = async (req, res, next) => {
@@ -209,13 +217,55 @@ exports.getAlertPage = async (req, res, next) => {
         let user = await Users.findOne({ trackID: req.params.alertID });
         let twitch = await Twitch.findOne({ userId: user.userId });
         if (twitch != null) {
-            res.status(200).render("alert", {configs: twitch.configs}); // Burası config e göre değişecek
+            res.status(200).render("alert", { configs: twitch.configs }); // Burası config e göre değişecek
         } else {
             res.send("Twitch has not connected!");
         }
     } catch (err) {
         res.send("Invalid track id")
     }
+};
+
+exports.uploadImage = async (req, res, next) => {
+    const file = req.file; // Yüklenen dosyanın bilgileri
+    // AWS S3'ye yüklemek için gerekli olan parametreler
+    let user_twitch = await Twitch.findOne({ userId: req.session.userId });
+    let type = req.body.type;
+
+    const upload_params = {
+        Bucket: process.env.AWS_BUCKET_NAME, // S3 bucket adı
+        Key: uuidv4(), // Dosyanın S3'de saklanacağı yol ve ad
+        Body: fs.createReadStream(file.path), // Dosya içeriği
+        ACL: 'public-read', // Dosyanın erişim izni (genellikle public olacaktır)
+        ContentType: file.mimetype // Dosya türü
+    };
+
+    let old_file = user_twitch.configs[type].imageUrl.split('/').slice(-1)[0];
+
+    const delete_params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: old_file
+    }
+
+    // AWS S3'ye dosyayı yükle
+    s3.upload(upload_params, (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ status: 'error'});
+        };
+        let url = data.Location
+        user_twitch.configs[type].imageUrl = url;
+        user_twitch.save();
+        s3.deleteObject(delete_params, (err) => {
+            if (err) {
+                console.log(err);
+            };
+        });
+
+        fs.unlinkSync(file.path);
+
+        return res.status(200).json({ status: 'success', url: url});
+    });
 };
 
 /* --------------------- TWITCH ISLEMLERI ---------------------*/
@@ -248,7 +298,7 @@ exports.callback = async (req, res, next) => {
             },
         });
         const twitch_id = userResponse.data.data[0].id;
-        
+
         if (await Twitch.findOne({ twitchId: twitch_id })) {
             res.render("error", { error: "Twitch has already been connected", redirect: "/dashboard" })
         } else {
@@ -274,7 +324,7 @@ exports.regenerateUrl = async (req, res, next) => {
         let newTrackID = uuidv4();
         await Users.findOneAndUpdate({ userId: req.session.userId }, { trackID: newTrackID }, { new: true });
         webSocket.disconnectUserWhenUrlRefreshed(req.session.userId);
-        res.send({ newTrackID: newTrackID, status: "success"})
+        res.send({ newTrackID: newTrackID, status: "success" })
 
     } catch (err) {
         res.send({ status: "error" })
@@ -283,7 +333,7 @@ exports.regenerateUrl = async (req, res, next) => {
 }
 
 exports.deleteTwitch = async (req, res, next) => {
-    try{
+    try {
         await Twitch.findOneAndDelete({ userId: req.session.userId });
         req.session.connected = false;
         res.render("success", { success: "Twitch connection deleted", redirect: "/dashboard" });

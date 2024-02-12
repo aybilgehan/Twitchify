@@ -71,9 +71,9 @@ exports.deleteEvents = async function (twitch_id, access_token, refresh_token) {
             headers: {
                 'Authorization': `OAuth ${access_token}`
             },
-        }).then(res => res.json()).then(json => {
+        }).then(res => res.json()).then(async json => {
             if (json.status == 401) {
-                refreshToken(twitch_id, refresh_token).then((new_access_token) => {
+                await refreshToken(twitch_id, refresh_token).then((new_access_token) => {
                     access_token = new_access_token;
                 });
             }

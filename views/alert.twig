@@ -50,162 +50,162 @@
     <div id="config-message"></div>
     <div id="user-message"></div>
   </div>
-
-  <script>
-    var config = {{ configs }}
-    var queue = [];
-    var isShowing = false;
-
-    setInterval(() => {
-      if (!isShowing) {
-        showNextEvent();
-      }
-    }, 1000);
-
-    function showEventNotification(configMsg, mascotImagePath, userMsg) {
-      isShowing = true;
-      const notificationContainer = document.getElementById('notification-container');
-      const mascotImageElement = document.getElementById('mascot-image');
-      const configMessageElement = document.getElementById('config-message');
-      const userMessageElement = document.getElementById('user-message');
-
-      // Ayarlanabilir süre (milisaniye cinsinden)
-      const displayTime = 5000; // 5 saniye
-
-      configMessageElement.textContent = configMsg;
-      mascotImageElement.src = mascotImagePath;
-      if (userMsg != "") {
-        userMessageElement.textContent = userMsg;
-      }
-
-      notificationContainer.style.display = 'block';
-      setTimeout(() => {
-        notificationContainer.style.opacity = 1;
-      }, 500);
-
-      setTimeout(() => {
-        notificationContainer.style.opacity = 0;
-        setTimeout(() => {
-          notificationContainer.style.display = 'none';
-          isShowing = false;
-        }, 500); // opacity transition süresi kadar bekle
-      }, displayTime);
-    }
-
-    // Örnek bir event geldiğinde bu fonksiyonu çağırabilirsiniz
-    function checkShowGift(is_gift, tier) {
-      if (!is_gift) return true;
-      switch (tier) {
-        case "1000":
-          return config.tier1.showGift;
-        case "2000":
-          return config.tier2.showGift;
-        case "3000":
-          return config.tier3.showGift;
-      }
-    }
-
-    function showNextEvent() {
-      if (queue.length == 0) return;
-      const event = queue.shift();
-      showEventNotification(event.configMessage, event.mascot, event.userMessage);
-    }
-
-    function editEvent(configMsg, replaceObj, imagePath, userMsg = "") {
-      let eventName = configMsg;
-      for (const [key, value] of Object.entries(replaceObj)) {
-        eventName = eventName.replace(key, value);
-      }
-      queue.push({ configMessage: eventName, mascot: imagePath, userMessage: userMsg });
-    }
-
-    function handleEvent(sub_type, event) {
-      // Burada event'e göre mesajı ve maskot görselini belirleyebilirsiniz
-      var eventName; var mascotImagePath
-      if (sub_type == "channel.follow") {
-        editEvent(config.follow.message, { "${user}": event.user_name }, config.follow.imageUrl);
-      } else if (sub_type == "channel.subscribe") {
-        switch (event.tier) {
-          case "1000":
-            if (checkShowGift(event.is_gift, event.tier)) {
-              editEvent(config.tier1.message, { "${user}": event.user_name }, config.tier1.imageUrl);
-            }
-            break;
-          case "2000":
-            if (checkShowGift(event.is_gift, event.tier)) {
-              editEvent(config.tier2.message, { "${user}": event.user_name }, config.tier2.imageUrl);
-            }
-            break;
-          case "3000":
-            if (checkShowGift(event.is_gift, event.tier)) {
-              editEvent(config.tier3.message, { "${user}": event.user_name }, config.tier3.imageUrl);
-            }
-            break;
-        }
-      } else if (sub_type == "channel.subscription.gift") {
-        switch (event.is_anonymous) {
-          case true:
-            editEvent(config.submysterygift.message, { "${amount}": event.total }, config.submysterygift.imageUrl);
-            break;
-          case false:
-            editEvent(config.subgift.message, { "${user}": event.user_name, "${amount}": event.total }, config.subgift.imageUrl);
-            break;
-        }
-      } else if (sub_type == "channel.subscription.message") {
-        editEvent(config.resub.message, { "${user}": event.user_name, "${months}": event.cumulative_months }, config.resub.imageUrl, event.message.text);
-      } else if (sub_type == "channel.cheer") {
-        if (event.is_anonymous) {
-          editEvent(config.cheer.message, { "${user}": "Anonim", "${bits}": event.bits }, config.cheer.imageUrl, event.message);
-        } else {
-          editEvent(config.cheer.message, { "${user}": event.user_name, "${bits}": event.bits }, config.cheer.imageUrl, event.message);
-        }
-      } else {
-        return;
-      }
-    }
-
-
-
-
-    const socket = io();
-
-    socket.on('connect', () => {
-      const ws = new WebSocket('wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=60');
-      ws.onmessage = function (event) {
-
-        const data = JSON.parse(event.data);
-        console.log(data)
-        if (data.metadata.message_type == 'session_welcome') {
-          let alertID = new URL(window.location.href).pathname.split('/')[2];
-          socket.emit('twitch.eventsub', { session_id: data.payload.session.id, alert_id: alertID })
-        }
-        else if (data.metadata.message_type == 'notification') {
-          socket.emit('record', JSON.stringify(data));
-          handleEvent(data.metadata.subscription_type, data.payload.event); //Burası mesaj geldiğinde çalışacak fonksiyon ayarlanacak
-
-        }
-        else if (data.metadata.message_type == 'reconnect') {
-          window.location.reload();
-        }
-        else if (data.metadata.message_type == 'revocation') {
-          if (data.payload.subscription.status == 'authorization_revoked') { socket.emit('refresh.token') }
-          else if (data.payload.subscription.status == 'user_removed') { window.close() }
-        }
-      };
-    });
-    socket.on('refresh.page', () => {
-      window.location.reload();
-    });
-    socket.on('test', (data) => {
-      config = data.config;
-      handleEvent(data.subscription.type, data.event);
-    });
-
-    socket.on('disconnect', () => {
-      window.location.reload();
-    });
-
-  </script>
 </body>
+
+<script>
+  var config = {{ configs }}
+  var queue = [];
+  var isShowing = false;
+
+  setInterval(() => {
+    if (!isShowing) {
+      showNextEvent();
+    }
+  }, 1000);
+
+  function showEventNotification(configMsg, mascotImagePath, userMsg) {
+    isShowing = true;
+    const notificationContainer = document.getElementById('notification-container');
+    const mascotImageElement = document.getElementById('mascot-image');
+    const configMessageElement = document.getElementById('config-message');
+    const userMessageElement = document.getElementById('user-message');
+
+    // Ayarlanabilir süre (milisaniye cinsinden)
+    const displayTime = 5000; // 5 saniye
+
+    configMessageElement.textContent = configMsg;
+    mascotImageElement.src = mascotImagePath;
+    if (userMsg != "") {
+      userMessageElement.textContent = userMsg;
+    }
+
+    notificationContainer.style.display = 'block';
+    setTimeout(() => {
+      notificationContainer.style.opacity = 1;
+    }, 500);
+
+    setTimeout(() => {
+      notificationContainer.style.opacity = 0;
+      setTimeout(() => {
+        notificationContainer.style.display = 'none';
+        isShowing = false;
+      }, 500); // opacity transition süresi kadar bekle
+    }, displayTime);
+  }
+
+  // Örnek bir event geldiğinde bu fonksiyonu çağırabilirsiniz
+  function checkShowGift(is_gift, tier) {
+    if (!is_gift) return true;
+    switch (tier) {
+      case "1000":
+        return config.tier1.showGift;
+      case "2000":
+        return config.tier2.showGift;
+      case "3000":
+        return config.tier3.showGift;
+    }
+  }
+
+  function showNextEvent() {
+    if (queue.length == 0) return;
+    const event = queue.shift();
+    showEventNotification(event.configMessage, event.mascot, event.userMessage);
+  }
+
+  function editEvent(configMsg, replaceObj, imagePath, userMsg = "") {
+    let eventName = configMsg;
+    for (const [key, value] of Object.entries(replaceObj)) {
+      eventName = eventName.replace(key, value);
+    }
+    queue.push({ configMessage: eventName, mascot: imagePath, userMessage: userMsg });
+  }
+
+  function handleEvent(sub_type, event) {
+    // Burada event'e göre mesajı ve maskot görselini belirleyebilirsiniz
+    var eventName; var mascotImagePath
+    if (sub_type == "channel.follow") {
+      editEvent(config.follow.message, { "${user}": event.user_name }, config.follow.imageUrl);
+    } else if (sub_type == "channel.subscribe") {
+      switch (event.tier) {
+        case "1000":
+          if (checkShowGift(event.is_gift, event.tier)) {
+            editEvent(config.tier1.message, { "${user}": event.user_name }, config.tier1.imageUrl);
+          }
+          break;
+        case "2000":
+          if (checkShowGift(event.is_gift, event.tier)) {
+            editEvent(config.tier2.message, { "${user}": event.user_name }, config.tier2.imageUrl);
+          }
+          break;
+        case "3000":
+          if (checkShowGift(event.is_gift, event.tier)) {
+            editEvent(config.tier3.message, { "${user}": event.user_name }, config.tier3.imageUrl);
+          }
+          break;
+      }
+    } else if (sub_type == "channel.subscription.gift") {
+      switch (event.is_anonymous) {
+        case true:
+          editEvent(config.submysterygift.message, { "${amount}": event.total }, config.submysterygift.imageUrl);
+          break;
+        case false:
+          editEvent(config.subgift.message, { "${user}": event.user_name, "${amount}": event.total }, config.subgift.imageUrl);
+          break;
+      }
+    } else if (sub_type == "channel.subscription.message") {
+      editEvent(config.resub.message, { "${user}": event.user_name, "${months}": event.cumulative_months }, config.resub.imageUrl, event.message.text);
+    } else if (sub_type == "channel.cheer") {
+      if (event.is_anonymous) {
+        editEvent(config.cheer.message, { "${user}": "Anonim", "${bits}": event.bits }, config.cheer.imageUrl, event.message);
+      } else {
+        editEvent(config.cheer.message, { "${user}": event.user_name, "${bits}": event.bits }, config.cheer.imageUrl, event.message);
+      }
+    } else {
+      return;
+    }
+  }
+
+
+
+
+  const socket = io();
+
+  socket.on('connect', () => {
+    const ws = new WebSocket('wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=60');
+    ws.onmessage = function (event) {
+
+      const data = JSON.parse(event.data);
+      console.log(data)
+      if (data.metadata.message_type == 'session_welcome') {
+        let alertID = new URL(window.location.href).pathname.split('/')[2];
+        socket.emit('twitch.eventsub', { session_id: data.payload.session.id, alert_id: alertID })
+      }
+      else if (data.metadata.message_type == 'notification') {
+        socket.emit('record', JSON.stringify(data));
+        handleEvent(data.metadata.subscription_type, data.payload.event); //Burası mesaj geldiğinde çalışacak fonksiyon ayarlanacak
+
+      }
+      else if (data.metadata.message_type == 'reconnect') {
+        window.location.reload();
+      }
+      else if (data.metadata.message_type == 'revocation') {
+        if (data.payload.subscription.status == 'authorization_revoked') { socket.emit('refresh.token') }
+        else if (data.payload.subscription.status == 'user_removed') { window.close() }
+      }
+    };
+  });
+  socket.on('refresh.page', () => {
+    window.location.reload();
+  });
+  socket.on('test', (data) => {
+    config = data.config;
+    handleEvent(data.subscription.type, data.event);
+  });
+
+  socket.on('disconnect', () => {
+    window.location.reload();
+  });
+
+</script>
 
 </html>

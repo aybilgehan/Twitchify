@@ -188,7 +188,7 @@
                         <div class="mt-3 collapse-container" id="cheer-Collapse" style="display: none;">
                             <button type="button" data-bs-toggle="collapse" data-bs-target="#cheerCollapse"
                                 aria-expanded="false" aria-controls="cheerCollapse"
-                                class="collapse-button collapse-title">
+                                class="collapse-button collapse-title w-100 text-start">
                                 Cheer Configuration
                             </button>
                             <div id="cheerCollapse" class="collapse mt-3">
@@ -200,11 +200,20 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="cheer-imageUrl" class="form-label">Image Url</label>
-                                    <input type="url" class="form-control" id="cheer-imageUrl"
-                                        onchange="updateConfig(this.id)">
+                                    <div class="d-flex column">
+                                        <input type="url" class="form-control" id="cheer-imageUrl"
+                                            onchange="updateConfig(this.id)">
+                                        <input type="file" id="cheer-fileInput" name="cheer-fileInput"
+                                            style="display: none;" accept=".png, .jpeg, .jpg, .webp, .gif">
+                                        <button type="button" style="all: unset; cursor: pointer;" title="Upload File"
+                                            onclick="document.getElementById('cheer-fileInput').click();">
+                                            <i class="fa-solid fa-file-import fa-2xl"
+                                                style="color: #74C0FC; margin-left: 2px"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="cheer-message" class="form-label">Image Url</label>
+                                    <label for="cheer-message" class="form-label">Message</label>
                                     <input type="text" class="form-control" id="cheer-message"
                                         aria-describedby="cheerMessageHelp" onchange="updateConfig(this.id)">
                                     <div class="form-text-container">
@@ -227,7 +236,7 @@
                         <div class="mt-3 collapse-container" id="follow-Collapse" style="display: none;">
                             <button type="button" data-bs-toggle="collapse" data-bs-target="#followCollapse"
                                 aria-expanded="false" aria-controls="followCollapse"
-                                class="collapse-button collapse-title">
+                                class="collapse-button collapse-title w-100 text-start">
                                 Follow Configuration
                             </button>
                             <div id="followCollapse" class="collapse mt-3">
@@ -238,11 +247,21 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="follow-imageUrl" class="form-label">Image Url</label>
-                                    <input type="url" class="form-control" id="follow-imageUrl"
-                                        onchange="updateConfig(this.id)">
+                                    <div class="d-flex column">
+                                        <input type="url" class="form-control" id="follow-imageUrl"
+                                            onchange="updateConfig(this.id)">
+                                        <input type="file" id="follow-fileInput" name="follow-fileInput"
+                                            style="display: none;" accept=".png, .jpeg, .jpg, .webp, .gif">
+                                        <button type="button" style="all: unset; cursor: pointer;" title="Upload File"
+                                            onclick="document.getElementById('follow-fileInput').click();">
+                                            <i class="fa-solid fa-file-import fa-2xl"
+                                                style="color: #74C0FC; margin-left: 2px"></i>
+                                        </button>
+
+                                    </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="follow-message" class="form-label">Image Url</label>
+                                    <label for="follow-message" class="form-label">Message</label>
                                     <input type="text" class="form-control" id="follow-message"
                                         aria-describedby="followMessageHelp" onchange="updateConfig(this.id)">
                                     <div class="form-text-container">
@@ -260,7 +279,7 @@
                         <div class="mt-3 collapse-container" id="sub-Collapse" style="display: none;">
                             <button type="button" data-bs-toggle="collapse" data-bs-target="#subCollapse"
                                 aria-expanded="false" aria-controls="subCollapse"
-                                class="collapse-button collapse-title">
+                                class="collapse-button collapse-title w-100 text-start">
                                 Sub Configuration
                             </button>
                             <div id="subCollapse" class="collapse mt-3">
@@ -274,11 +293,21 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="tier1-imageUrl" class="form-label">Image Url</label>
-                                        <input type="url" class="form-control" id="tier1-imageUrl"
-                                            onchange="updateConfig(this.id)">
+                                        <div class="d-flex column">
+                                            <input type="url" class="form-control" id="tier1-imageUrl"
+                                                onchange="updateConfig(this.id)">
+                                            <input type="file" id="tier1-fileInput" name="tier1-fileInput"
+                                                style="display: none;" accept=".png, .jpeg, .jpg, .webp, .gif">
+                                            <button type="button" style="all: unset; cursor: pointer;"
+                                                title="Upload File"
+                                                onclick="document.getElementById('tier1-fileInput').click();">
+                                                <i class="fa-solid fa-file-import fa-2xl"
+                                                    style="color: #74C0FC; margin-left: 2px"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="tier1-message" class="form-label">Image Url</label>
+                                        <label for="tier1-message" class="form-label">Message</label>
                                         <input type="text" class="form-control" id="tier1-message"
                                             aria-describedby="tier1MessageHelp" onchange="updateConfig(this.id)">
                                         <div class="form-text-container">
@@ -307,11 +336,21 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="tier2-imageUrl" class="form-label">Image Url</label>
-                                        <input type="url" class="form-control" id="tier2-imageUrl"
-                                            onchange="updateConfig(this.id)">
+                                        <div class="d-flex column">
+                                            <input type="url" class="form-control" id="tier2-imageUrl"
+                                                onchange="updateConfig(this.id)">
+                                            <input type="file" id="tier2-fileInput" name="tier2-fileInput"
+                                                style="display: none;" accept=".png, .jpeg, .jpg, .webp, .gif">
+                                            <button type="button" style="all: unset; cursor: pointer;"
+                                                title="Upload File"
+                                                onclick="document.getElementById('tier2-fileInput').click();">
+                                                <i class="fa-solid fa-file-import fa-2xl"
+                                                    style="color: #74C0FC; margin-left: 2px"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="tier2-message" class="form-label">Image Url</label>
+                                        <label for="tier2-message" class="form-label">Message</label>
                                         <input type="text" class="form-control" id="tier2-message"
                                             aria-describedby="tier2MessageHelp" onchange="updateConfig(this.id)">
                                         <div class="form-text-container">
@@ -340,11 +379,21 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="tier3-imageUrl" class="form-label">Image Url</label>
-                                        <input type="url" class="form-control" id="tier3-imageUrl"
-                                            onchange="updateConfig(this.id)">
+                                        <div class="d-flex colum">
+                                            <input type="url" class="form-control" id="tier3-imageUrl"
+                                                onchange="updateConfig(this.id)">
+                                            <input type="file" id="tier3-fileInput" name="tier3-fileInput"
+                                                style="display: none;" accept=".png, .jpeg, .jpg, .webp, .gif">
+                                            <button type="button" style="all: unset; cursor: pointer;"
+                                                title="Upload File"
+                                                onclick="document.getElementById('tier3-fileInput').click();">
+                                                <i class="fa-solid fa-file-import fa-2xl"
+                                                    style="color: #74C0FC; margin-left: 2px"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="tier3-message" class="form-label">Image Url</label>
+                                        <label for="tier3-message" class="form-label">Message</label>
                                         <input type="text" class="form-control" id="tier3-message"
                                             aria-describedby="tier3MessageHelp" onchange="updateConfig(this.id)">
                                         <div class="form-text-container">
@@ -369,7 +418,7 @@
                         <div class="mt-3 collapse-container" id="subgift-Collapse" style="display: none;">
                             <button type="button" data-bs-toggle="collapse" data-bs-target="#subgiftCollapse"
                                 aria-expanded="false" aria-controls="subgiftCollapse"
-                                class="collapse-button collapse-title">
+                                class="collapse-button collapse-title w-100 text-start">
                                 Sub Gift Configuration
                             </button>
                             <div id="subgiftCollapse" class="collapse mt-3">
@@ -383,11 +432,21 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="subgift-imageUrl" class="form-label">Image Url</label>
-                                        <input type="url" class="form-control" id="subgift-imageUrl"
-                                            onchange="updateConfig(this.id)">
+                                        <div class="d-flex column">
+                                            <input type="url" class="form-control" id="subgift-imageUrl"
+                                                onchange="updateConfig(this.id)">
+                                            <input type="file" id="subgift-fileInput" name="subgift-fileInput"
+                                                style="display: none;" accept=".png, .jpeg, .jpg, .webp, .gif">
+                                            <button type="button" style="all: unset; cursor: pointer;"
+                                                title="Upload File"
+                                                onclick="document.getElementById('subgift-fileInput').click();">
+                                                <i class="fa-solid fa-file-import fa-2xl"
+                                                    style="color: #74C0FC; margin-left: 2px"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="subgift-message" class="form-label">Image Url</label>
+                                        <label for="subgift-message" class="form-label">Message</label>
                                         <input type="text" class="form-control" id="subgift-message"
                                             aria-describedby="subgiftMessageHelp" onchange="updateConfig(this.id)">
                                         <div class="form-text-container">
@@ -414,11 +473,22 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="submysterygift-imageUrl" class="form-label">Image Url</label>
-                                        <input type="url" class="form-control" id="submysterygift-imageUrl"
-                                            onchange="updateConfig(this.id)">
+                                        <div class="d-flex column">
+                                            <input type="url" class="form-control" id="submysterygift-imageUrl"
+                                                onchange="updateConfig(this.id)">
+                                            <input type="file" id="submysterygift-fileInput"
+                                                name="submysterygift-fileInput" style="display: none;"
+                                                accept=".png, .jpeg, .jpg, .webp, .gif">
+                                            <button type="button" style="all: unset; cursor: pointer;"
+                                                title="Upload File"
+                                                onclick="document.getElementById('submysterygift-fileInput').click();">
+                                                <i class="fa-solid fa-file-import fa-2xl"
+                                                    style="color: #74C0FC; margin-left: 2px"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="submysterygift-message" class="form-label">Image Url</label>
+                                        <label for="submysterygift-message" class="form-label">Message</label>
                                         <input type="text" class="form-control" id="submysterygift-message"
                                             aria-describedby="submysterygiftMessageHelp"
                                             onchange="updateConfig(this.id)">
@@ -440,7 +510,7 @@
                         <div class="mt-3 collapse-container" id="substreak-Collapse" style="display: none;">
                             <button type="button" data-bs-toggle="collapse" data-bs-target="#substreakCollapse"
                                 aria-expanded="false" aria-controls="substreakCollapse"
-                                class="collapse-button collapse-title">
+                                class="collapse-button collapse-title w-100 text-start">
                                 Sub Streak Configuration (Resub)
                             </button>
                             <div id="substreakCollapse" class="collapse mt-3">
@@ -451,11 +521,20 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="resub-imageUrl" class="form-label">Image Url</label>
-                                    <input type="url" class="form-control" id="resub-imageUrl"
-                                        onchange="updateConfig(this.id)">
+                                    <div class="d-flex column">
+                                        <input type="url" class="form-control" id="resub-imageUrl"
+                                            onchange="updateConfig(this.id)">
+                                        <input type="file" id="resub-fileInput" name="resub-fileInput"
+                                            style="display: none;" accept=".png, .jpeg, .jpg, .webp, .gif">
+                                        <button type="button" style="all: unset; cursor: pointer;" title="Upload File"
+                                            onclick="document.getElementById('resub-fileInput').click();">
+                                            <i class="fa-solid fa-file-import fa-2xl"
+                                                style="color: #74C0FC; margin-left: 2px"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="resub-message" class="form-label">Image Url</label>
+                                    <label for="resub-message" class="form-label">Message</label>
                                     <input type="text" class="form-control" id="resub-message"
                                         aria-describedby="resubMessageHelp" onchange="updateConfig(this.id)">
                                     <div class="form-text-container">
@@ -542,6 +621,7 @@
 <script src='js/owl.carousel.min.js'></script>
 <script src='js/jquery.sticky-kit.min.js'></script>
 <script src='js/main.js'></script>
+<script src="https://kit.fontawesome.com/91392e7091.js" crossorigin="anonymous"></script>
 
 <!--Eventsub Type Checkboxes -->
 <script>
@@ -561,7 +641,7 @@
             config.querySelectorAll('input').forEach(function (input) {
                 if (input.type == "checkbox") {
                     input.checked = configs[input.id.split('-')[0]].hasOwnProperty(input.id.split('-')[1]) ? configs[input.id.split('-')[0]][input.id.split('-')[1]] : false;
-                } else {
+                } else if (input.type != "file") {
                     input.value = configs[input.id.split('-')[0]].hasOwnProperty(input.id.split('-')[1]) ? configs[input.id.split('-')[0]][input.id.split('-')[1]] : "-";
                 }
             });
@@ -588,7 +668,6 @@
             }
         });
     });
-
 </script>
 
 <!-- Eventsub Configuration -->
@@ -597,10 +676,10 @@
         var input = document.getElementById(id);
         if (input.type == "checkbox") {
             configs[id.split('-')[0]][id.split('-')[1]] = input.checked;
-        } else {
+        } else if (input.type != "file") {
             var value = input.value;
             configs[id.split('-')[0]][id.split('-')[1]] = value;
-        }
+        };
     };
 
     function saveConfig() {
@@ -620,6 +699,46 @@
             }
         });
     }
+</script>
+
+<!-- File Uplaod -->
+<script>
+
+    var fileInputs = document.querySelectorAll('input[type="file"]');
+    fileInputs.forEach(function (fileInput) {
+        fileInput.addEventListener('change', function () {
+            var file = fileInput.files[0];
+
+            if(file.size > 1024 * 1024 * 1){
+                alert("danger", "File size must be less than 1MB!");
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('file', file, file.name);
+            formData.append('type', fileInput.id.split('-')[0]);
+
+            $.ajax({
+                url: appUrl + "upload",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.status == "success") {
+                        alert("success", "Image uploaded!");
+                        document.getElementById(fileInput.id.split('-')[0] + '-imageUrl').value = response.url;
+                        updateConfig(fileInput.id.split('-')[0] + '-imageUrl');
+                    } else {
+                        alert("danger", "Image could not uploaded!");
+                    }
+                },
+                error: function () {
+                    alert("danger", "Image could not uploaded!");
+                }
+            })
+        });
+    });
 </script>
 
 <script>
@@ -747,8 +866,6 @@
         });
 
     });
-
-
 </script>
 
 </html>

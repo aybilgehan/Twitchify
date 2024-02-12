@@ -1,7 +1,23 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const path = require("path");
 const pageController = require("../page.controller/page.controller.js");
 const mw = require("../middlewares/mw.js");
+
+const upload = multer({
+    dest: 'uploads/',
+    fileFilter: (req, file, cb) => {
+        // Yalnızca belirli dosya türlerine izin ver
+        const allowedFileTypes = ['.png', '.jpeg', '.jpg', '.webp', '.gif'];
+        const extname = path.extname(file.originalname).toLowerCase();
+        if (allowedFileTypes.includes(extname)) {
+            return cb(null, true);
+        } else {
+            return cb(new Error('Yalnızca PNG, JPEG, JPG, WebP ve GIF dosyalarına izin verilir.'));
+        }
+    }
+});
 
 /* - WEBSITE GET ISLEMLERI - */
 router.get("/", pageController.getMainPage);
@@ -27,6 +43,7 @@ router.post("/test", mw.checkUserLoggedIn, mw.checkTwitchConnected, pageControll
 router.post("/login", pageController.postLoginPage);
 router.post("/register", pageController.postRegisterPage);
 router.post("/update-config", mw.checkUserLoggedIn, mw.checkTwitchConnected, pageController.postUpdateConfigs);
+router.post("/upload", mw.checkUserLoggedIn, mw.checkTwitchConnected, upload.single('file') ,pageController.uploadImage);
 
 
 /* - TEST - */
