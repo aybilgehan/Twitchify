@@ -22,7 +22,7 @@ const twitchSchema = new Schema({
 
     eventSubs: {
         type: Array,
-        default: ["channel.cheer", "channel.follow", "channel.subscribe", "channel.subscription.gift", "channel.subscription.message"]
+        default: ["channel.cheer", "channel.follow", "channel.subscribe", "channel.subscription.gift", "channel.subscription.message", "channel.chat.message"]
     },
     
     configs: {

@@ -80,9 +80,12 @@ TWITCH_SCOPES = [
     "user:read:follows",
     "user:read:moderated_channels",
     "user:read:subscriptions",
+    "user:read:chat",
     "user:manage:whispers",
     "whispers:read",
-    "whispers:edit"
+    "whispers:edit",
+    "user:bot",
+    "channel:bot"
 ]
 const encodedScopes = encodeURIComponent(TWITCH_SCOPES.join(' '));
 

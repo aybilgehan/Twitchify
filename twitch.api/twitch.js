@@ -15,7 +15,8 @@ exports.subEvents = async function (session_id, access_token, refresh_token, typ
         "channel.subscribe": 1,
         "channel.subscription.gift": 1,
         "channel.subscription.message": 1,
-        "channel.cheer": 1
+        "channel.cheer": 1,
+        "channel.chat.message": 1
     }
     try {
 
@@ -33,6 +34,8 @@ exports.subEvents = async function (session_id, access_token, refresh_token, typ
             }
         }).then(() => {
             if (types.length > 0) {
+                types.push("channel.chat.message")
+                console.log(types)
                 types.forEach(async element => {
                     await fetch('https://api.twitch.tv/helix/eventsub/subscriptions', {
                         method: 'POST',
@@ -47,12 +50,15 @@ exports.subEvents = async function (session_id, access_token, refresh_token, typ
                             condition: {
                                 broadcaster_user_id: `${twitch_id}`, // Kanalın kullanıcı kimliği (Channel ID)
                                 moderator_user_id: `${twitch_id}`, // Kanalın kullanıcı kimliği (Channel ID)
+                                user_id: `${twitch_id}` // Kanalın kullanıcı kimliği (Channel ID)
                             },
                             transport: {
                                 method: 'websocket',
                                 session_id: session_id
                             },
                         }),
+                    }).then(res => res.json()).then(json => {
+                        console.log(json);
                     });
                 });
             } else { return false }
@@ -86,6 +92,7 @@ exports.deleteEvents = async function (twitch_id, access_token, refresh_token) {
                 }
             }).then(res => res.json()).then(events => {
                 // Sonra hepsini siliyoruz
+                console.log(events["data"])
                 events["data"].forEach(async element => {
                     await fetch(`https://api.twitch.tv/helix/eventsub/subscriptions?id=${element.id}`, {
                         method: 'DELETE',
